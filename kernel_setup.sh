@@ -20,7 +20,7 @@ BRANCH_ARM="c74ca949048d1421522afc24748dbda9b70ec924"
 # clone_tc - clones proton clang to TC_DIR
 clone_tc() {
 	wget https://github.com/mvaisakh/gcc-arm64/archive/$BRANCH_ARM64.zip && unzip $BRANCH_ARM64.zip && mv -f gcc-arm64-$BRANCH_ARM64 $TC_DIR/arm64
-	wget https://github.com/mvaisakh/gcc-arm/archive/$BRANCH_ARM.zip && unzip $BRANCH_ARM.zip && mv -f gcc-arm-$BRANCH_ARM.zip $TC_DIR/arm
+	wget https://github.com/mvaisakh/gcc-arm/archive/$BRANCH_ARM.zip && unzip $BRANCH_ARM.zip && mv -f gcc-arm-$BRANCH_ARM $TC_DIR/arm
         git clone --depth=1 https://github.com/kdrag0n/proton-clang $TC_DIR/clang
         cd $TC_DIR/clang
         sudo cp -rf bin /usr/
