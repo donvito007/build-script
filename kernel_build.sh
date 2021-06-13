@@ -17,7 +17,7 @@ export ARCH SUBARCH
 KERNEL_IMG=$KERNEL_DIR/out/arch/$ARCH/boot/Image.gz-dtb
 
 TG_CHAT_ID="942627647"
-TG_BOT_TOKEN="$(cat key.txt)"
+TG_BOT_TOKEN="$(cat $KERNEL_DIR/key.txt)"
 # End config
 
 # Function definitions
