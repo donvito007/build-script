@@ -22,9 +22,9 @@ while getopts a: flag; do
 done
 
 # Select build with LTO or not: y, n
-while getopts lto: flag; do
+while getopts b: flag; do
   case "${flag}" in
-    lto) SELECT_LTO=${OPTARG} ;;
+    b) SELECT_LTO=${OPTARG} ;;
   esac
 done
 
