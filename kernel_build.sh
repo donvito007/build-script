@@ -17,6 +17,10 @@ case "${SELECT_LTO}" in
 esac
 
 # Config
+KERNELNAME="Kucing"
+AK_REPO="https://github.com/Diaz1401/AnyKernel3"
+AK_DIR="$HOME/AnyKernel3"
+TC_DIR="$HOME"
 CUR_DIR="$(pwd)"
 LOG="$HOME/log.txt"
 DATE_BUILD="$(date +"%A"_"%I":"%M"_"%p")"
