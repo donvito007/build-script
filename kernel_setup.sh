@@ -14,16 +14,10 @@ AK_DIR="$HOME/AnyKernel3"
 TC_DIR="$HOME"
 # End Config
 
-# Select GCC Compiler: eva-gcc, arter97-gcc, choki-gcc
-while getopts a: flag; do
+# Select GCC Compiler (-a) : eva-gcc, arter97-gcc, choki-gcc or Select build with LTO or not (-b) : y, n
+while getopts "a:b:" flag; do
   case "${flag}" in
     a) SELECT_TOOL=${OPTARG} ;;
-  esac
-done
-
-# Select build with LTO or not: y, n
-while getopts b: flag; do
-  case "${flag}" in
     b) SELECT_LTO=${OPTARG} ;;
   esac
 done
