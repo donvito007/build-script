@@ -23,7 +23,6 @@ AK_DIR="$HOME/AnyKernel3"
 TC_DIR="$HOME"
 CUR_DIR="$(pwd)"
 LOG="$HOME/log.txt"
-DATE_BUILD="$(date +"%A"_"%I":"%M"_"%p")"
 GCC_VER="$(cat $CUR_DIR/SELECT_TOOL)"
 LTO_VER="$(cat $CUR_DIR/SELECT_LTO)"
 # Export arch and subarch
@@ -106,7 +105,7 @@ build_end() {
 	cd "$AK_DIR" || echo -e "\nAnykernel directory ($AK_DIR) does not exist" || exit 1
 	git clean -fd
 	mv "$KERNEL_IMG" "$AK_DIR"/zImage
-	ZIP_NAME=$KERNELNAME-$GCC_VER-$LTO_VER-$DATE_BUILD
+	ZIP_NAME=$KERNELNAME-$GCC_VER-$LTO_VER
 	zip -r9 "$ZIP_NAME".zip ./* -x .git README.md ./*placeholder
         ZIP_NAME="$ZIP_NAME".zip
 
