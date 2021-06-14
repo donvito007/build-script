@@ -19,8 +19,8 @@ esac
 # Config
 LOG="$HOME/log.txt"
 DATE_BUILD="$(date +"%A"_"%I":"%M"_"%p")"
-GCC_VER="$(cat "$CUR_DIR"/SELECT_TOOL)"
-LTO_VER="$(cat "$CUR_DIR"/SELECT_LTO)"
+GCC_VER="$(cat $CUR_DIR/SELECT_TOOL)"
+LTO_VER="$(cat $CUR_DIR/SELECT_LTO)"
 # Export arch and subarch
 ARCH="arm64"
 SUBARCH="arm64"
