@@ -4,20 +4,34 @@
 # Copyright (C) 2021 CloudedQuartz
 #
 
-# Config
-DEVICE="beryllium"
-DEFCONFIG="${DEVICE}_defconfig"
-LOG="$HOME/log.txt"
+# Select defconfig
+while getopts a: flag; do
+  case "${flag}" in
+    a) SELECT_LTO=${OPTARG} ;;
+  esac
+done
 
+case "${SELECT_LTO}" in
+  "y") DEFCONFIG="beryllium_lto_defconfig"} ;;
+  "n") DEFCONFIG="beryllium_defconfig"} ;;
+esac
+
+# Config
+LOG="$HOME/log.txt"
+DATE_BUILD="$(date +"%A"_"%I":"%M"_"%p")"
+GCC_VER="$(cat "$CUR_DIR"/SELECT_TOOL)"
+LTO_VER="$(cat "$CUR_DIR"/SELECT_LTO)"
 # Export arch and subarch
 ARCH="arm64"
 SUBARCH="arm64"
-export ARCH SUBARCH
+KBUILD_BUILD_USER="Diaz"
+KBUILD_BUILD_HOST="Bitbucket-Pipeline"
+export ARCH SUBARCH KBUILD_BUILD_HOST KBUILD_BUILD_USER
 
-KERNEL_IMG=$KERNEL_DIR/out/arch/$ARCH/boot/Image.gz-dtb
+KERNEL_IMG=$CUR_DIR/out/arch/$ARCH/boot/Image.gz-dtb
 
 TG_CHAT_ID="942627647"
-TG_BOT_TOKEN="$(cat $KERNEL_DIR/key.txt)"
+TG_BOT_TOKEN="$(cat $CUR_DIR/key.txt)"
 # End config
 
 # Function definitions
@@ -48,7 +62,7 @@ tg_failed() {
 # build_setup - enter kernel directory and get info for caption.
 # also removes the previous kernel image, if one exists.
 build_setup() {
-    cd "$KERNEL_DIR" || echo -e "\nKernel directory ($KERNEL_DIR) does not exist" || exit 1
+    cd "$CUR_DIR" || echo -e "\nKernel directory ($CUR_DIR) does not exist" || exit 1
 
     [[ ! -d out ]] && mkdir out
     [[ -f "$KERNEL_IMG" ]] && rm "$KERNEL_IMG"
@@ -87,7 +101,7 @@ build_end() {
 	cd "$AK_DIR" || echo -e "\nAnykernel directory ($AK_DIR) does not exist" || exit 1
 	git clean -fd
 	mv "$KERNEL_IMG" "$AK_DIR"/zImage
-	ZIP_NAME=$KERNELNAME
+	ZIP_NAME=$KERNELNAME-$GCC_VER-$LTO_VER-$DATE_BUILD
 	zip -r9 "$ZIP_NAME".zip ./* -x .git README.md ./*placeholder
         ZIP_NAME="$ZIP_NAME".zip
 
