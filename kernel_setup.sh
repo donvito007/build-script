@@ -13,23 +13,36 @@ KERNEL_DIR="$CURRENT_DIR"
 AK_REPO="https://github.com/Diaz1401/AnyKernel3"
 AK_DIR="$HOME/AnyKernel3"
 TC_DIR="$HOME"
-BRANCH_ARM64="63184f4c4963fe303abd9cae6c05df5222cb8229"
-BRANCH_ARM="c74ca949048d1421522afc24748dbda9b70ec924"
+
+# Select GCC Compiler: eva-gcc, arter97-gcc
+while getopts a: flag; do
+  case "${flag}" in
+    a) TOOLCHAIN=${OPTARG} ;;
+  esac
+done
+
+case "${TOOLCHAIN}" in
+  "eva-gcc") clone_tc="clone_tc1" ;;
+  "arter97-gcc") clone_tc="clone_tc2" ;;
+esac
 # End Config
 
-# clone_tc - clones proton clang to TC_DIR
-clone_tc() {
-	wget https://github.com/mvaisakh/gcc-arm64/archive/$BRANCH_ARM64.zip && unzip $BRANCH_ARM64.zip && mv -f gcc-arm64-$BRANCH_ARM64 $TC_DIR/arm64
-	wget https://github.com/mvaisakh/gcc-arm/archive/$BRANCH_ARM.zip && unzip $BRANCH_ARM.zip && mv -f gcc-arm-$BRANCH_ARM $TC_DIR/arm
-        git clone --depth=1 https://github.com/kdrag0n/proton-clang $TC_DIR/clang
-        cd $TC_DIR/clang
-        sudo cp -rf bin /usr/
+# clone_tc - clones gcc toolchain to TC_DIR
+clone_tc1() {
+	git clone --depth=1 https://github.com/mvaisakh/gcc-arm64 $TC_DIR/arm64
+	git clone --depth=1 https://github.com/mvaisakh/gcc-arm $TC_DIR/arm
 }
+
+clone_tc2() {
+	git clone --depth=1 https://github.com/arter97/arm64-gcc $TC_DIR/arm64
+	git clone --depth=1 https://github.com/arter97/arm32-gcc $TC_DIR/arm
+}
+
 # Clones anykernel
 clone_ak() {
 	git clone $AK_REPO $AK_DIR
 }
-# Actually do stuff
+# Actually do #
 clone_tc
 clone_ak
 
