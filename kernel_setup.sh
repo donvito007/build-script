@@ -15,7 +15,7 @@ AK_DIR="$HOME/AnyKernel3"
 TC_DIR="$HOME"
 # End Config
 
-# Select GCC Compiler: eva-gcc, arter97-gcc
+# Select GCC Compiler: eva-gcc, arter97-gcc, choki-gcc
 while getopts a: flag; do
   case "${flag}" in
     a) TOOLCHAIN=${OPTARG} ;;
@@ -31,6 +31,10 @@ case "${TOOLCHAIN}" in
   "arter97-gcc") clone_tc() {
 	git clone --depth=1 https://github.com/arter97/arm64-gcc $TC_DIR/arm64
 	git clone --depth=1 https://github.com/arter97/arm32-gcc $TC_DIR/arm
+} ;;
+  "choki-gcc") clone_tc() {
+	git clone --depth=1 https://github.com/Diaz1401/arm64 $TC_DIR/arm64
+	git clone --depth=1 https://github.com/Diaz1401/arm $TC_DIR/arm
 } ;;
 esac
 
