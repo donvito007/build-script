@@ -17,6 +17,7 @@ case "${SELECT_LTO}" in
 esac
 
 # Config
+CUR_DIR="$(pwd)"
 LOG="$HOME/log.txt"
 DATE_BUILD="$(date +"%A"_"%I":"%M"_"%p")"
 GCC_VER="$(cat $CUR_DIR/SELECT_TOOL)"
