@@ -1,3 +1,7 @@
+#!/bin/bash
+#
+# Copyright (c) 2021 CloudedQuartz
+
 CURRENT_DIR="$(pwd)"
 KERNELNAME="Kucing"
 KERNEL_DIR="$CURRENT_DIR"
