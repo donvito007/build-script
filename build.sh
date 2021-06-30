@@ -8,7 +8,7 @@ LOG="$HOME/log.txt"
 KERNEL_IMG=$KERNEL_DIR/out/arch/$ARCH/boot/Image.gz-dtb
 TG_CHAT_ID="942627647"
 TG_BOT_TOKEN="$(cat $KERNEL_DIR/key.txt)"
-GCC_VER="$1" # write from 10 to 12, example: bash ./build.sh 11
+GCC_VER="$1" # write from 10 to 12, example: bash build.sh 11
 
 #
 # Export arch, subarch, etc
