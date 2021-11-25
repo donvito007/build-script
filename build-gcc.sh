@@ -6,7 +6,7 @@
 KERNEL_NAME="Kucing"
 KERNEL_DIR="$(pwd)"
 AK3="$KERNEL_DIR/AnyKernel3"
-TOOLCHAIN="$KERNEL_DIR/clang"
+TOOLCHAIN="$KERNEL_DIR/gcc"
 LOG="$KERNEL_DIR/log.txt"
 KERNEL_IMG="$KERNEL_DIR/out/arch/arm64/boot/Image.gz-dtb"
 KERNEL_DTBO="$KERNEL_DIR/out/arch/arm64/boot/dtbo.img"
