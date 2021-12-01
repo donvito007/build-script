@@ -65,7 +65,7 @@ build_kernel() {
     rm -rf out
     mkdir out
     BUILD_START=$(date +"%s")
-    make O=out vendor/alioth_defconfig
+    make O=out cat_defconfig
     make -j$(nproc --all) O=out \
         PATH="$TOOLCHAIN/arm64/bin:$TOOLCHAIN/arm/bin:$PATH" \
         CROSS_COMPILE=aarch64-elf- \

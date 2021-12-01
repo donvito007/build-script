@@ -64,7 +64,7 @@ build_kernel() {
     mkdir out
     BUILD_START=$(date +"%s")
     export KBUILD_COMPILER_STRING=$("$TOOLCHAIN"/bin/clang --version | head -n 1 | perl -pe 's/\(http.*?\)//gs' | sed -e 's/  */ /g' -e 's/[[:space:]]*$//')
-    make O=out vendor/alioth_defconfig
+    make O=out cat_defconfig
     make -j$(nproc --all) O=out \
         PATH="$TOOLCHAIN/bin:$PATH" \
         CC=clang \
