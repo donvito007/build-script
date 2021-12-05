@@ -16,6 +16,7 @@ GCC_VER="$1" # write from 10 to 12, example: bash build-gcc.sh 11
 
 export KBUILD_BUILD_USER="Diaz"
 export KBUILD_BUILD_HOST="DroneCI"
+export PATH="$TOOLCHAIN/arm64/bin:$TOOLCHAIN/arm/bin:$PATH"
 
 MAKE="./makeparallel"
 
@@ -67,7 +68,6 @@ build_kernel() {
     BUILD_START=$(date +"%s")
     make O=out cat_defconfig
     make -j$(nproc --all) O=out \
-        PATH="$TOOLCHAIN/arm64/bin:$TOOLCHAIN/arm/bin:$PATH" \
         CROSS_COMPILE=aarch64-elf- \
         CROSS_COMPILE_ARM32=arm-eabi- |& tee $LOG
 

@@ -15,6 +15,8 @@ TG_BOT_TOKEN="$TELEGRAM_TOKEN"
 
 export KBUILD_BUILD_USER="Diaz"
 export KBUILD_BUILD_HOST="DroneCI"
+export PATH="$TOOLCHAIN/bin:$PATH"
+export KBUILD_COMPILER_STRING=$("$TOOLCHAIN"/bin/clang --version | head -n 1 | perl -pe 's/\(http.*?\)//gs' | sed -e 's/  */ /g' -e 's/[[:space:]]*$//')
 
 MAKE="./makeparallel"
 
@@ -63,10 +65,8 @@ build_kernel() {
     rm -rf out
     mkdir out
     BUILD_START=$(date +"%s")
-    export KBUILD_COMPILER_STRING=$("$TOOLCHAIN"/bin/clang --version | head -n 1 | perl -pe 's/\(http.*?\)//gs' | sed -e 's/  */ /g' -e 's/[[:space:]]*$//')
     make O=out cat_defconfig
     make -j$(nproc --all) O=out \
-        PATH="$TOOLCHAIN/bin:$PATH" \
         CC=clang \
         CROSS_COMPILE=aarch64-linux-gnu- \
         CROSS_COMPILE_ARM32=arm-linux-gnueabi- \
