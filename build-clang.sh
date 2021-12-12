@@ -16,14 +16,13 @@ TG_BOT_TOKEN="$TELEGRAM_TOKEN"
 export KBUILD_BUILD_USER="Diaz"
 export KBUILD_BUILD_HOST="DroneCI"
 export PATH="$TOOLCHAIN/bin:$PATH"
-export KBUILD_COMPILER_STRING=$("$TOOLCHAIN"/bin/clang --version | head -n 1 | perl -pe 's/\(http.*?\)//gs' | sed -e 's/  */ /g' -e 's/[[:space:]]*$//')
 
 MAKE="./makeparallel"
 
 #
 # Clone Clang Compiler
 clone_tc() {
-        git clone --depth=1 https://gitlab.com/Panchajanya1999/azure-clang.git $TOOLCHAIN
+        git clone --depth 1 https://gitlab.com/Panchajanya1999/azure-clang.git $TOOLCHAIN
 }
 
 #
@@ -65,6 +64,7 @@ build_kernel() {
     rm -rf out
     mkdir out
     BUILD_START=$(date +"%s")
+    export KBUILD_COMPILER_STRING=$("$TOOLCHAIN"/bin/clang --version | head -n 1 | perl -pe 's/\(http.*?\)//gs' | sed -e 's/  */ /g' -e 's/[[:space:]]*$//')
     make O=out cat_defconfig
     make -j$(nproc --all) O=out \
         CC=clang \
