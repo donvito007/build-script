@@ -15,14 +15,19 @@ TG_BOT_TOKEN="$TELEGRAM_TOKEN"
 
 export KBUILD_BUILD_USER="Diaz"
 export KBUILD_BUILD_HOST="DroneCI"
-export PATH="$TOOLCHAIN/bin:$PATH"
 
 MAKE="./makeparallel"
 
 #
 # Clone Clang Compiler
 clone_tc() {
-        git clone --depth 1 https://gitlab.com/Panchajanya1999/azure-clang.git $TOOLCHAIN
+	mkdir -p $TOOLCHAIN && cd $TOOLCHAIN
+	wget -q https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+archive/refs/heads/master/clang-r437112.tar.gz
+	tar -xf clang*
+	git clone https://github.com/Diaz1401/gcc-arm64 --depth 1 -b gcc-11 $TOOLCHAIN/arm64
+	git clone https://github.com/Diaz1401/gcc-arm --depth 1 -b gcc-11 $TOOLCHAIN/arm
+	PATH="${KERNEL_DIR}/clang/bin:${KERNEL_DIR}/arm64/bin:${KERNEL_DIR}/arm/bin:${PATH}"
+
 }
 
 #
@@ -67,10 +72,19 @@ build_kernel() {
     export KBUILD_COMPILER_STRING=$("$TOOLCHAIN"/bin/clang --version | head -n 1 | perl -pe 's/\(http.*?\)//gs' | sed -e 's/  */ /g' -e 's/[[:space:]]*$//')
     make O=out cat_defconfig
     make -j$(nproc --all) O=out \
-        CC=clang \
-        CROSS_COMPILE=aarch64-linux-gnu- \
-        CROSS_COMPILE_ARM32=arm-linux-gnueabi- \
-        LD=ld.lld |& tee $LOG
+       CC=clang \
+       HOSTCC=clang \
+       HOSTCXX=clang++ \
+       CROSS_COMPILE=aarch64-linux-gnu- \
+       CROSS_COMPILE_ARM32=arm-linux-gnueabi- \
+       LD=ld.gold \
+       AR=llvm-ar \
+       NM=llvm-nm \
+       OBJCOPY=llvm-objcopy \
+       OBJDUMP=llvm-objdump \
+       STRIP=llvm-strip \
+       READELF=llvm-readelf \
+       OBJSIZE=llvm-size |& tee $LOG
 
     BUILD_END=$(date +"%s")
     DIFF=$((BUILD_END - BUILD_START))
