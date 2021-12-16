@@ -75,9 +75,9 @@ build_kernel() {
        CC=clang \
        HOSTCC=clang \
        HOSTCXX=clang++ \
-       CROSS_COMPILE=aarch64-linux-gnu- \
-       CROSS_COMPILE_ARM32=arm-linux-gnueabi- \
-       LD=ld.gold \
+       CROSS_COMPILE=aarch64-elf- \
+       CROSS_COMPILE_ARM32=arm-eabi- \
+       LD=aarch64-elf-ld.gold \
        AR=llvm-ar \
        NM=llvm-nm \
        OBJCOPY=llvm-objcopy \
