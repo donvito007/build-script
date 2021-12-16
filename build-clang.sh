@@ -23,7 +23,7 @@ MAKE="./makeparallel"
 # Clone Clang Compiler
 clone_tc() {
 	mkdir -p $TOOLCHAIN && cd $TOOLCHAIN
-	wget -q https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+archive/refs/heads/master/clang-r437112.tar.gz
+	wget -q https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+archive/refs/heads/master/clang-r416183b.tar.gz
 	tar -xf clang*
 	git clone https://github.com/Diaz1401/gcc-arm64 --depth 1 -b gcc-11 $TOOLCHAIN/arm64
 	git clone https://github.com/Diaz1401/gcc-arm --depth 1 -b gcc-11 $TOOLCHAIN/arm
@@ -73,17 +73,8 @@ build_kernel() {
     make O=out cat_defconfig
     make -j$(nproc --all) O=out \
        CC=clang \
-       HOSTCC=clang \
-       HOSTCXX=clang++ \
        CROSS_COMPILE=aarch64-elf- \
-       CROSS_COMPILE_ARM32=arm-eabi- \
-       AR=llvm-ar \
-       NM=llvm-nm \
-       OBJCOPY=llvm-objcopy \
-       OBJDUMP=llvm-objdump \
-       STRIP=llvm-strip \
-       READELF=llvm-readelf \
-       OBJSIZE=llvm-size |& tee $LOG
+       CROSS_COMPILE_ARM32=arm-eabi- |& tee $LOG
 
     BUILD_END=$(date +"%s")
     DIFF=$((BUILD_END - BUILD_START))
