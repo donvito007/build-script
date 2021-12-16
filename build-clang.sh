@@ -15,6 +15,7 @@ TG_BOT_TOKEN="$TELEGRAM_TOKEN"
 
 export KBUILD_BUILD_USER="Diaz"
 export KBUILD_BUILD_HOST="DroneCI"
+export PATH="$TOOLCHAIN/bin:$TOOLCHAIN/arm64/bin:$TOOLCHAIN/arm/bin:$PATH"
 
 MAKE="./makeparallel"
 
@@ -26,7 +27,6 @@ clone_tc() {
 	tar -xf clang*
 	git clone https://github.com/Diaz1401/gcc-arm64 --depth 1 -b gcc-11 $TOOLCHAIN/arm64
 	git clone https://github.com/Diaz1401/gcc-arm --depth 1 -b gcc-11 $TOOLCHAIN/arm
-	PATH="${KERNEL_DIR}/clang/bin:${KERNEL_DIR}/arm64/bin:${KERNEL_DIR}/arm/bin:${PATH}"
 
 }
 
@@ -77,7 +77,6 @@ build_kernel() {
        HOSTCXX=clang++ \
        CROSS_COMPILE=aarch64-elf- \
        CROSS_COMPILE_ARM32=arm-eabi- \
-       LD=aarch64-elf-ld.gold \
        AR=llvm-ar \
        NM=llvm-nm \
        OBJCOPY=llvm-objcopy \
