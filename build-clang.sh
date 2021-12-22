@@ -101,7 +101,6 @@ build_end() {
 
     echo -e "Send zip to Telegram"
     tg_pushzip "$ZIP_NAME" "Time taken: <code>$((DIFF / 60))m $((DIFF % 60))s</code>"
-    sleep 10
     tg_log
 }
 
