@@ -9,7 +9,6 @@ AK3="$KERNEL_DIR/AnyKernel3"
 TOOLCHAIN="$KERNEL_DIR/gcc"
 LOG="$KERNEL_DIR/log.txt"
 KERNEL_IMG="$KERNEL_DIR/out/arch/arm64/boot/Image"
-KERNEL_DTB="$KERNEL_DIR/out/arch/arm64/boot/dtb"
 KERNEL_DTBO="$KERNEL_DIR/out/arch/arm64/boot/dtbo.img"
 TG_CHAT_ID="-1001180467256"
 TG_BOT_TOKEN="$TELEGRAM_TOKEN"
@@ -80,7 +79,7 @@ build_kernel() {
 #
 # build_end - creates and sends zip
 build_end() {
-    if ! [[ -a "$KERNEL_IMG" && -a "$KERNEL_DTB" && -a "$KERNEL_DTBO" ]]; then
+    if ! [[ -a "$KERNEL_IMG" && -a "$KERNEL_DTBO" ]]; then
     echo -e "Build failed, sad"
     tg_log
     exit 1
@@ -89,7 +88,6 @@ build_end() {
     echo -e "Build success, generating flashable zip..."
     cd $AK3
     mv "$KERNEL_IMG" "$AK3"
-    mv "$KERNEL_DTB" "$AK3"
     mv "$KERNEL_DTBO" "$AK3"
     ZIP_NAME=$KERNEL_NAME-$DATE_NAME
     zip -r9 "$ZIP_NAME".zip * -x .git README.md
