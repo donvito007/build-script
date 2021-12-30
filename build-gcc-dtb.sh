@@ -84,7 +84,7 @@ build_end() {
     tg_log
     exit 1
     fi
-
+    ls $KERNEL_DIR/out/arch/arm64/boot/
     echo -e "Build success, generating flashable zip..."
     cd $AK3
     mv "$KERNEL_IMG" "$AK3"
