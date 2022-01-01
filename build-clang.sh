@@ -71,16 +71,11 @@ build_kernel() {
     mkdir out
     BUILD_START=$(date +"%s")
     export KBUILD_COMPILER_STRING=$("$TOOLCHAIN"/bin/clang --version | head -n 1 | perl -pe 's/\(http.*?\)//gs' | sed -e 's/  */ /g' -e 's/[[:space:]]*$//')
-    make O=out cat_defconfig \
-       CC=clang \
-       CROSS_COMPILE=aarch64-elf- \
-       CROSS_COMPILE_ARM32=arm-eabi- \
-       LD=ld.lld
+    make O=out cat_defconfig LLVM=1
     make -j$(nproc --all) O=out \
-       CC=clang \
+       LLVM=1 \
        CROSS_COMPILE=aarch64-elf- \
-       CROSS_COMPILE_ARM32=arm-eabi- \
-       LD=ld.lld |& tee $LOG
+       CROSS_COMPILE_ARM32=arm-eabi- |& tee $LOG
 
     BUILD_END=$(date +"%s")
     DIFF=$((BUILD_END - BUILD_START))
