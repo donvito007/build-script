@@ -8,7 +8,7 @@ KERNEL_DIR="$(pwd)"
 AK3="$KERNEL_DIR/AnyKernel3"
 TOOLCHAIN="$KERNEL_DIR/clang"
 LOG="$KERNEL_DIR/log.txt"
-KERNEL_IMG="$KERNEL_DIR/out/arch/arm64/boot/Image.gz-dtb"
+KERNEL_IMG="$KERNEL_DIR/out/arch/arm64/boot/Image"
 KERNEL_DTBO="$KERNEL_DIR/out/arch/arm64/boot/dtbo.img"
 TG_CHAT_ID="-1001180467256"
 TG_BOT_TOKEN="$TELEGRAM_TOKEN"
@@ -16,8 +16,6 @@ TG_BOT_TOKEN="$TELEGRAM_TOKEN"
 export KBUILD_BUILD_USER="Diaz"
 export KBUILD_BUILD_HOST="DroneCI"
 export PATH="$TOOLCHAIN/bin:$TOOLCHAIN/arm64/bin:$TOOLCHAIN/arm/bin:$PATH"
-
-MAKE="./makeparallel"
 
 #
 # Clone Clang Compiler
@@ -70,11 +68,16 @@ build_kernel() {
     mkdir out
     BUILD_START=$(date +"%s")
     export KBUILD_COMPILER_STRING=$("$TOOLCHAIN"/bin/clang --version | head -n 1 | perl -pe 's/\(http.*?\)//gs' | sed -e 's/  */ /g' -e 's/[[:space:]]*$//')
-    make O=out cat_defconfig
+    make O=out cat_defconfig \
+       CC=clang \
+       CROSS_COMPILE=aarch64-elf- \
+       CROSS_COMPILE_ARM32=arm-eabi- \
+       LD=ld.lld
     make -j$(nproc --all) O=out \
        CC=clang \
        CROSS_COMPILE=aarch64-elf- \
-       CROSS_COMPILE_ARM32=arm-eabi- |& tee $LOG
+       CROSS_COMPILE_ARM32=arm-eabi- \
+       LD=ld.lld |& tee $LOG
 
     BUILD_END=$(date +"%s")
     DIFF=$((BUILD_END - BUILD_START))
@@ -96,7 +99,7 @@ build_end() {
     mv "$KERNEL_IMG" "$AK3"
     mv "$KERNEL_DTBO" "$AK3"
     ZIP_NAME=$KERNEL_NAME-$DATE_NAME
-    zip -r9 "$ZIP_NAME".zip * -x .git README
+    zip -r9 "$ZIP_NAME".zip * -x .git README.md
     ZIP_NAME="$ZIP_NAME".zip
 
     echo -e "Send zip to Telegram"
