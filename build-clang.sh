@@ -14,6 +14,13 @@ TG_CHAT_ID="-1001180467256"
 TG_BOT_TOKEN="$TELEGRAM_TOKEN"
 CLANG_VERSION="r437112"
 
+# Colors
+WHITE='\033[0m'
+RED='\033[1;31m'
+GREEN='\033[1;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[1;34m'
+
 export KBUILD_BUILD_USER="Diaz"
 export KBUILD_BUILD_HOST="DroneCI"
 export PATH="$TOOLCHAIN/bin:$TOOLCHAIN/arm64/bin:$TOOLCHAIN/arm/bin:$PATH"
@@ -22,10 +29,10 @@ export PATH="$TOOLCHAIN/bin:$TOOLCHAIN/arm64/bin:$TOOLCHAIN/arm/bin:$PATH"
 # Clone Clang Compiler
 clone_tc() {
 	mkdir -p $TOOLCHAIN && cd $TOOLCHAIN
-	echo -e "Downloading AOSP Clang $CLANG_VERSION"
+	echo -e "${YELLOW}===> ${BLUE}Downloading AOSP Clang ${CLANG_VERSION}${WHITE}"
 	wget -q https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+archive/refs/heads/master/clang-$CLANG_VERSION.tar.gz
 	tar -xf clang*
-	echo -e "Downloading GCC Cross Compiler"
+	echo -e "${YELLOW}===> ${BLUE}Cloning GCC Cross Compiler${WHITE}"
 	git clone -q https://github.com/Diaz1401/gcc-arm64 --depth 1 -b gcc-11 $TOOLCHAIN/arm64
 	git clone -q https://github.com/Diaz1401/gcc-arm --depth 1 -b gcc-11 $TOOLCHAIN/arm
 
@@ -34,7 +41,8 @@ clone_tc() {
 #
 # Clones anykernel
 clone_ak() {
-        git clone --depth 1 https://github.com/Diaz1401/AnyKernel3.git -b alioth $AK3
+    echo -e "${YELLOW}===> ${BLUE}Cloning AnyKernel3${WHITE}"
+    git clone -q --depth 1 https://github.com/Diaz1401/AnyKernel3.git -b alioth $AK3
 }
 
 #
@@ -87,12 +95,13 @@ build_kernel() {
 build_end() {
 
     if ! [[ -a "$KERNEL_IMG" && -a "$KERNEL_DTBO" ]]; then
-    echo -e "Build failed, sad"
+    echo -e "${YELLOW}===> ${RED}Build failed, sad${WHITE}"
+    echo -e "${YELLOW}===> ${GREEN}Send build log to Telegram${WHITE}"
     tg_log
     exit 1
     fi
 
-    echo -e "Build success, generating flashable zip..."
+    echo -e "${YELLOW}===> ${GREEN}Build success, generating flashable zip..."
     cd $AK3
     mv "$KERNEL_IMG" "$AK3"
     mv "$KERNEL_DTBO" "$AK3"
@@ -100,8 +109,10 @@ build_end() {
     zip -r9 "$ZIP_NAME".zip * -x .git README.md
     ZIP_NAME="$ZIP_NAME".zip
 
-    echo -e "Send zip to Telegram"
+    echo -e "${YELLOW}===> ${BLUE}Send zip to Telegram"
     tg_pushzip "$ZIP_NAME" "Time taken: <code>$((DIFF / 60))m $((DIFF % 60))s</code>"
+    echo -e "${YELLOW}===> ${WHITE}Zip name: ${GREEN}${ZIP_NAME}"
+    echo -e "${YELLOW}===> ${RED}Send build log to Telegram"
     tg_log
 }
 
