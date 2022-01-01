@@ -22,10 +22,12 @@ export PATH="$TOOLCHAIN/bin:$TOOLCHAIN/arm64/bin:$TOOLCHAIN/arm/bin:$PATH"
 # Clone Clang Compiler
 clone_tc() {
 	mkdir -p $TOOLCHAIN && cd $TOOLCHAIN
+	echo -e "Downloading AOSP Clang $CLANG_VERSION"
 	wget -q https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+archive/refs/heads/master/clang-$CLANG_VERSION.tar.gz
 	tar -xf clang*
-	git clone https://github.com/Diaz1401/gcc-arm64 --depth 1 -b gcc-11 $TOOLCHAIN/arm64
-	git clone https://github.com/Diaz1401/gcc-arm --depth 1 -b gcc-11 $TOOLCHAIN/arm
+	echo -e "Downloading GCC Cross Compiler"
+	git clone -q https://github.com/Diaz1401/gcc-arm64 --depth 1 -b gcc-11 $TOOLCHAIN/arm64
+	git clone -q https://github.com/Diaz1401/gcc-arm --depth 1 -b gcc-11 $TOOLCHAIN/arm
 
 }
 
