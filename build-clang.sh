@@ -12,6 +12,7 @@ KERNEL_IMG="$KERNEL_DIR/out/arch/arm64/boot/Image"
 KERNEL_DTBO="$KERNEL_DIR/out/arch/arm64/boot/dtbo.img"
 TG_CHAT_ID="-1001180467256"
 TG_BOT_TOKEN="$TELEGRAM_TOKEN"
+CLANG_VERSION="r437112"
 
 export KBUILD_BUILD_USER="Diaz"
 export KBUILD_BUILD_HOST="DroneCI"
@@ -21,7 +22,7 @@ export PATH="$TOOLCHAIN/bin:$TOOLCHAIN/arm64/bin:$TOOLCHAIN/arm/bin:$PATH"
 # Clone Clang Compiler
 clone_tc() {
 	mkdir -p $TOOLCHAIN && cd $TOOLCHAIN
-	wget -q https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+archive/refs/heads/master/clang-r416183b.tar.gz
+	wget -q https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+archive/refs/heads/master/clang-$CLANG_VERSION.tar.gz
 	tar -xf clang*
 	git clone https://github.com/Diaz1401/gcc-arm64 --depth 1 -b gcc-11 $TOOLCHAIN/arm64
 	git clone https://github.com/Diaz1401/gcc-arm --depth 1 -b gcc-11 $TOOLCHAIN/arm
