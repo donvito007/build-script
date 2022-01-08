@@ -82,6 +82,7 @@ build_kernel() {
     make O=out cat_defconfig LLVM=1
     make -j$(nproc --all) O=out \
        LLVM=1 \
+       LLVM_IAS=1 \
        CROSS_COMPILE=aarch64-elf- \
        CROSS_COMPILE_ARM32=arm-eabi- |& tee $LOG
 
@@ -107,7 +108,7 @@ build_end() {
     mv "$KERNEL_IMG" "$AK3"
     mv "$KERNEL_DTBO" "$AK3"
     ZIP_NAME=$KERNEL_NAME-$DATE_NAME
-    zip -r9 "$ZIP_NAME".zip * -x .git README.md
+    zip -r9 "$ZIP_NAME".zip * -x .git .github LICENSE README.md
     ZIP_NAME="$ZIP_NAME".zip
 
     echo -e "${YELLOW}===> ${BLUE}Send zip to Telegram"
