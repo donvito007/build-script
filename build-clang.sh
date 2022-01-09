@@ -84,7 +84,8 @@ build_kernel() {
        LLVM=1 \
        LLVM_IAS=1 \
        CROSS_COMPILE=aarch64-elf- \
-       CROSS_COMPILE_ARM32=arm-eabi- |& tee $LOG
+       CROSS_COMPILE_ARM32=arm-eabi- \
+       POLLY=${TOOLCHAIN}/lib64/LLVMPolly.so |& tee $LOG
 
     BUILD_END=$(date +"%s")
     DIFF=$((BUILD_END - BUILD_START))
