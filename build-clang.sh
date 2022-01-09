@@ -12,7 +12,6 @@ KERNEL_IMG="$KERNEL_DIR/out/arch/arm64/boot/Image"
 KERNEL_DTBO="$KERNEL_DIR/out/arch/arm64/boot/dtbo.img"
 TG_CHAT_ID="-1001180467256"
 TG_BOT_TOKEN="$TELEGRAM_TOKEN"
-CLANG_VERSION="r416183b"
 
 # Colors
 WHITE='\033[0m'
@@ -23,19 +22,13 @@ BLUE='\033[1;34m'
 
 export KBUILD_BUILD_USER="Diaz"
 export KBUILD_BUILD_HOST="DroneCI"
-export PATH="$TOOLCHAIN/bin:$TOOLCHAIN/arm64/bin:$TOOLCHAIN/arm/bin:$PATH"
+export PATH="$TOOLCHAIN/bin:$PATH"
 
 #
 # Clone Clang Compiler
 clone_tc() {
-	mkdir -p $TOOLCHAIN && cd $TOOLCHAIN
-	echo -e "${YELLOW}===> ${BLUE}Downloading AOSP Clang ${CLANG_VERSION}${WHITE}"
-	wget -q https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+archive/refs/heads/master/clang-$CLANG_VERSION.tar.gz
-	tar -xf clang*
-	echo -e "${YELLOW}===> ${BLUE}Cloning GCC Cross Compiler${WHITE}"
-	git clone -q https://github.com/Diaz1401/gcc-arm64 --depth 1 -b gcc-11 $TOOLCHAIN/arm64
-	git clone -q https://github.com/Diaz1401/gcc-arm --depth 1 -b gcc-11 $TOOLCHAIN/arm
-
+    echo -e "${YELLOW}===> ${BLUE}Cloning CAT Clang${WHITE}"
+    git clone -q https://github.com/Diaz1401/clang --depth 1 -b main $TOOLCHAIN
 }
 
 #
@@ -48,19 +41,19 @@ clone_ak() {
 #
 # tg_sendinfo - sends text to telegram
 tg_sendinfo() {
-        curl -s "https://api.telegram.org/bot$TG_BOT_TOKEN/sendMessage" \
-                -F parse_mode=html \
-                -F text="${1}" \
-                -F chat_id="${TG_CHAT_ID}" &> /dev/null
+    curl -s "https://api.telegram.org/bot$TG_BOT_TOKEN/sendMessage" \
+        -F parse_mode=html \
+        -F text="${1}" \
+        -F chat_id="${TG_CHAT_ID}" &> /dev/null
 }
 
 #
 # tg_pushzip - uploads final zip to telegram
 tg_pushzip() {
-        curl -F document=@"$1"  "https://api.telegram.org/bot$TG_BOT_TOKEN/sendDocument" \
-                        -F chat_id=$TG_CHAT_ID \
-                        -F caption="$2" \
-                        -F parse_mode=html &> /dev/null
+    curl -F document=@"$1"  "https://api.telegram.org/bot$TG_BOT_TOKEN/sendDocument" \
+        -F chat_id=$TG_CHAT_ID \
+        -F caption="$2" \
+        -F parse_mode=html &> /dev/null
 }
 
 #
@@ -78,14 +71,13 @@ build_kernel() {
     rm -rf out
     mkdir out
     BUILD_START=$(date +"%s")
-    export KBUILD_COMPILER_STRING=$("$TOOLCHAIN"/bin/clang --version | head -n 1 | perl -pe 's/\(http.*?\)//gs' | sed -e 's/  */ /g' -e 's/[[:space:]]*$//')
     make O=out cat_defconfig LLVM=1
     make -j$(nproc --all) O=out \
        LLVM=1 \
        LLVM_IAS=1 \
        CROSS_COMPILE=aarch64-elf- \
        CROSS_COMPILE_ARM32=arm-eabi- \
-       POLLY=${TOOLCHAIN}/lib64/LLVMPolly.so |& tee $LOG
+       POLLY=${TOOLCHAIN}/lib/LLVMPolly.so |& tee $LOG
 
     BUILD_END=$(date +"%s")
     DIFF=$((BUILD_END - BUILD_START))
