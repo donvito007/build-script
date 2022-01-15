@@ -75,9 +75,9 @@ build_kernel() {
     make -j$(nproc --all) O=out \
        LLVM=1 \
        LLVM_IAS=1 \
-       CROSS_COMPILE=aarch64-elf- \
-       CROSS_COMPILE_ARM32=arm-eabi- \
-       POLLY=${TOOLCHAIN}/lib/LLVMPolly.so |& tee $LOG
+       CROSS_COMPILE=aarch64-linux-gnu- \
+       CROSS_COMPILE_ARM32=arm-linux-gnueabi- \
+       CLANG_TRIPLE=aarch64-linux-gnu- |& tee $LOG
 
     BUILD_END=$(date +"%s")
     DIFF=$((BUILD_END - BUILD_START))
