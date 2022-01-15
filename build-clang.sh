@@ -76,8 +76,7 @@ build_kernel() {
        LLVM=1 \
        LLVM_IAS=1 \
        CROSS_COMPILE=aarch64-linux-gnu- \
-       CROSS_COMPILE_ARM32=arm-linux-gnueabi- \
-       CLANG_TRIPLE=aarch64-linux-gnu- |& tee $LOG
+       CROSS_COMPILE_ARM32=arm-linux-gnueabi- |& tee $LOG
 
     BUILD_END=$(date +"%s")
     DIFF=$((BUILD_END - BUILD_START))
