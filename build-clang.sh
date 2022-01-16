@@ -29,6 +29,20 @@ export PATH="$TOOLCHAIN/bin:$PATH"
 clone_tc() {
     echo -e "${YELLOW}===> ${BLUE}Cloning CAT Clang${WHITE}"
     git clone -q https://github.com/Diaz1401/clang --depth 1 -b main $TOOLCHAIN
+    combine(){
+        cat $1-split* > $1
+        chmod +x $1
+        rm $1-split*
+    }
+    combine "$TOOLCHAIN/bin/bugpoint"
+    combine "$TOOLCHAIN/bin/llvm-lto2"
+    combine "$TOOLCHAIN/bin/clang-scan-deps"
+    combine "$TOOLCHAIN/bin/clang-repl"
+    combine "$TOOLCHAIN/bin/opt"
+    combine "$TOOLCHAIN/bin/clang-14"
+    combine "$TOOLCHAIN/bin/lld"
+    combine "$TOOLCHAIN/lib/libclang-cpp.so.14git"
+    combine "$TOOLCHAIN/lib/libclang.so.14.0.0git"
 }
 
 #
