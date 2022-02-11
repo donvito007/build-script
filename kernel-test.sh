@@ -32,7 +32,7 @@ clone_repo(){
             b) BRANCH=${OPTARG} ;;
         esac
     done
-    git clone https://github.com/Diaz1401/quantic_kernel_xiaomi_sm8250 -b $BRANCH --depth 1 kernel && cd kernel
+    git clone https://github.com/Diaz1401/quantic_kernel_xiaomi_sm8250 -b --single-branch $BRANCH --depth 1 kernel && cd kernel
 }
 
 #

@@ -23,8 +23,8 @@ MAKE="./makeparallel"
 #
 # Clone Clang Compiler
 clone_tc() {
-        git clone https://github.com/Diaz1401/gcc-arm64 --depth 1 -b gcc-$GCC_VER $TOOLCHAIN/arm64
-	git clone https://github.com/Diaz1401/gcc-arm --depth 1 -b gcc-$GCC_VER $TOOLCHAIN/arm
+        git clone https://github.com/Diaz1401/gcc-arm64 --depth 1 -b --single-branch gcc-$GCC_VER $TOOLCHAIN/arm64
+	git clone https://github.com/Diaz1401/gcc-arm --depth 1 -b --single-branch gcc-$GCC_VER $TOOLCHAIN/arm
 }
 
 #

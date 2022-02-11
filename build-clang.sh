@@ -28,7 +28,7 @@ export PATH="$TOOLCHAIN/bin:$PATH"
 # Clone Clang Compiler
 clone_tc() {
     echo -e "${YELLOW}===> ${BLUE}Cloning CAT Clang${WHITE}"
-    git clone -q https://github.com/Diaz1401/clang --depth 1 -b main $TOOLCHAIN
+    git clone -q https://github.com/Diaz1401/clang --depth 1 -b main --single-branch $TOOLCHAIN
     combine(){
         cat $1-split* > $1
         chmod +x $1
