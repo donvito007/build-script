@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Copyright (c) 2021 CloudedQuartz
-# Copyright (c) 2021 Diaz1401
+# Copyright (c) 2021-2022 Diaz1401
 
 KERNEL_NAME="Kucing"
 KERNEL_DIR="$(pwd)"
