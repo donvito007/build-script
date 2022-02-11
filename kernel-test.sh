@@ -12,6 +12,7 @@ KERNEL_IMG="$KERNEL_DIR/out/arch/arm64/boot/Image"
 KERNEL_DTBO="$KERNEL_DIR/out/arch/arm64/boot/dtbo.img"
 TG_CHAT_ID="-1001180467256"
 TG_BOT_TOKEN="$TELEGRAM_TOKEN"
+BRANCH=$1
 
 # Colors
 WHITE='\033[0m'
@@ -26,14 +27,7 @@ export PATH="$TOOLCHAIN/bin:$PATH"
 
 #
 # Clone kernel repository
-clone_repo(){
-    while getopts b: flag; do
-        case "${flag}" in
-            b) BRANCH=${OPTARG} ;;
-        esac
-    done
-    git clone https://github.com/Diaz1401/quantic_kernel_xiaomi_sm8250 -b --single-branch $BRANCH --depth 1 kernel && cd kernel
-}
+git clone https://github.com/Diaz1401/quantic_kernel_xiaomi_sm8250 -b $BRANCH --single-branch kernel && cd kernel
 
 #
 # Clone Clang Compiler
@@ -109,14 +103,12 @@ build_kernel(){
 #
 # build_end - creates and sends zip
 build_end(){
-
     if ! [[ -a "$KERNEL_IMG" && -a "$KERNEL_DTBO" ]]; then
     echo -e "${YELLOW}===> ${RED}Build failed, sad${WHITE}"
     echo -e "${YELLOW}===> ${GREEN}Send build log to Telegram${WHITE}"
     tg_log
     exit 1
     fi
-
     echo -e "${YELLOW}===> ${GREEN}Build success, generating flashable zip..."
     ls $KERNEL_DIR/out/arch/arm64/boot/
     cd $AK3
@@ -125,7 +117,6 @@ build_end(){
     ZIP_NAME=$KERNEL_NAME-$DATE_NAME
     zip -r9 "$ZIP_NAME".zip * -x .git .github LICENSE README.md
     ZIP_NAME="$ZIP_NAME".zip
-
     echo -e "${YELLOW}===> ${BLUE}Send zip to Telegram"
     tg_pushzip "$ZIP_NAME" "Time taken: <code>$((DIFF / 60))m $((DIFF % 60))s</code>"
     echo -e "${YELLOW}===> ${WHITE}Zip name: ${GREEN}${ZIP_NAME}"
@@ -147,7 +138,6 @@ Branch: <code>$KERNEL_BRANCH</code>
 
 #
 # compile time
-clone_repo
 clone_tc
 clone_ak
 tg_sendinfo "$CAPTION
