@@ -4,7 +4,7 @@
 # Copyright (c) 2021-2022 Diaz1401
 
 KERNEL_NAME="Kucing"
-KERNEL_DIR="$(pwd)"
+KERNEL_DIR="$(pwd)/kernel"
 AK3="$KERNEL_DIR/AnyKernel3"
 TOOLCHAIN="$KERNEL_DIR/clang"
 LOG="$KERNEL_DIR/log.txt"
@@ -27,7 +27,7 @@ export PATH="$TOOLCHAIN/bin:$PATH"
 
 #
 # Clone kernel repository
-git clone https://github.com/Diaz1401/quantic_kernel_xiaomi_sm8250 -b $BRANCH --single-branch kernel && cd kernel
+git clone https://github.com/Diaz1401/quantic_kernel_xiaomi_sm8250 -b $BRANCH --single-branch $KERNEL_DIR && cd $KERNEL_DIR
 
 #
 # Clone Clang Compiler
