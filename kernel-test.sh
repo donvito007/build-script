@@ -39,15 +39,10 @@ clone_tc(){
         chmod +x $1
         rm $1-split*
     }
-    combine "$TOOLCHAIN/bin/bugpoint"
-    combine "$TOOLCHAIN/bin/llvm-lto2"
     combine "$TOOLCHAIN/bin/clang-scan-deps"
     combine "$TOOLCHAIN/bin/clang-repl"
-    combine "$TOOLCHAIN/bin/opt"
     combine "$TOOLCHAIN/bin/clang-15"
-    combine "$TOOLCHAIN/bin/lld"
     combine "$TOOLCHAIN/lib/libclang-cpp.so.15git"
-    combine "$TOOLCHAIN/lib/libclang.so.15.0.0git"
 }
 
 #
