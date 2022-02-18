@@ -83,7 +83,6 @@ build_kernel(){
     make O=out cat_defconfig LLVM=1
     make -j$(nproc --all) O=out \
        LLVM=1 \
-       LLVM_IAS=1 \
        CROSS_COMPILE=aarch64-linux-gnu- |& tee $LOG
     BUILD_END=$(date +"%s")
     DIFF=$((BUILD_END - BUILD_START))
