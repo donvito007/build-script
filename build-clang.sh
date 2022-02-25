@@ -12,6 +12,7 @@ KERNEL_IMG="$KERNEL_DIR/out/arch/arm64/boot/Image"
 KERNEL_DTBO="$KERNEL_DIR/out/arch/arm64/boot/dtbo.img"
 TG_CHAT_ID="-1001180467256"
 TG_BOT_TOKEN="$TELEGRAM_TOKEN"
+CLANG_VERSION="$1"
 
 # Colors
 WHITE='\033[0m'
@@ -27,17 +28,10 @@ export PATH="$TOOLCHAIN/bin:$PATH"
 #
 # Clone Clang Compiler
 clone_tc(){
-    echo -e "${YELLOW}===> ${BLUE}Cloning CAT Clang${WHITE}"
-    git clone -q https://github.com/Diaz1401/clang --depth 1 -b main --single-branch $TOOLCHAIN
-    combine(){
-        cat $1-split* > $1
-        chmod +x $1
-        rm $1-split*
-    }
-    combine "$TOOLCHAIN/bin/clang-scan-deps"
-    combine "$TOOLCHAIN/bin/clang-repl"
-    combine "$TOOLCHAIN/bin/clang-15"
-    combine "$TOOLCHAIN/lib/libclang-cpp.so.15git"
+    echo -e "${YELLOW}===> ${BLUE}Downloading kucing Clang${WHITE}"
+    mkdir -p $TOOLCHAIN
+    wget -q https://github.com/Diaz1401/clang/releases/download/$CLANG_VERSION/clang.tar.zst
+    tar xf clang.tar.zst -C $TOOLCHAIN
 }
 
 #
@@ -78,7 +72,7 @@ tg_log(){
 build_kernel(){
     cd "$KERNEL_DIR"
     rm -rf out
-    mkdir out
+    mkdir -p out
     BUILD_START=$(date +"%s")
     make O=out cat_defconfig LLVM=1
     make -j$(nproc --all) O=out \
