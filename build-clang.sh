@@ -9,6 +9,7 @@ AK3="$KERNEL_DIR/AnyKernel3"
 TOOLCHAIN="$KERNEL_DIR/clang"
 LOG="$KERNEL_DIR/log.txt"
 KERNEL_IMG="$KERNEL_DIR/out/arch/arm64/boot/Image"
+KERNEL_DTBO="$KERNEL_DIR/out/arch/arm64/boot/dtb.img"
 KERNEL_DTBO="$KERNEL_DIR/out/arch/arm64/boot/dtbo.img"
 TG_CHAT_ID="-1001180467256"
 TG_BOT_TOKEN="$TELEGRAM_TOKEN"
@@ -86,7 +87,7 @@ build_kernel(){
 #
 # build_end - creates and sends zip
 build_end(){
-    if ! [[ -a "$KERNEL_IMG" && -a "$KERNEL_DTBO" ]]; then
+    if ! [[ -a "$KERNEL_IMG" ]]; then
     echo -e "${YELLOW}===> ${RED}Build failed, sad${WHITE}"
     echo -e "${YELLOW}===> ${GREEN}Send build log to Telegram${WHITE}"
     tg_log
@@ -96,6 +97,7 @@ build_end(){
     ls $KERNEL_DIR/out/arch/arm64/boot/
     cd $AK3
     mv "$KERNEL_IMG" "$AK3"
+    mv "$KERNEL_DTB" "$AK3"
     mv "$KERNEL_DTBO" "$AK3"
     ZIP_NAME=$KERNEL_NAME-$DATE_NAME
     zip -r9 "$ZIP_NAME".zip * -x .git .github LICENSE README.md
