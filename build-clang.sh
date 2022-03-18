@@ -10,7 +10,7 @@ TOOLCHAIN="$KERNEL_DIR/clang"
 LOG="$KERNEL_DIR/log.txt"
 KERNEL_IMG="$KERNEL_DIR/out/arch/arm64/boot/Image"
 KERNEL_IMG_DTB="$KERNEL_DIR/out/arch/arm64/boot/Image-dtb"
-KERNEL_DTB="$KERNEL_DIR/out/arch/arm64/boot/dtb.img"
+KERNEL_IMG_GZ_DTB="$KERNEL_DIR/out/arch/arm64/boot/Image.gz-dtb"
 KERNEL_DTBO="$KERNEL_DIR/out/arch/arm64/boot/dtbo.img"
 TG_CHAT_ID="-1001180467256"
 TG_BOT_TOKEN="$TELEGRAM_TOKEN"
@@ -88,7 +88,9 @@ build_kernel(){
 #
 # build_end - creates and sends zip
 build_end(){
-    if [[ -a "$KERNEL_IMG_DTB" ]]; then
+    if [[ -a "$KERNEL_IMG_GZ_DTB" ]]; then
+    mv "$KERNEL_IMG_GZ_DTB" "$AK3"
+    elif [[ -a "$KERNEL_IMG_DTB" ]]; then
     mv "$KERNEL_IMG_DTB" "$AK3"
     elif [[ -a "$KERNEL_IMG" ]]; then
     mv "$KERNEL_IMG" "$AK3"
@@ -101,7 +103,6 @@ build_end(){
     echo -e "${YELLOW}===> ${GREEN}Build success, generating flashable zip..."
     ls $KERNEL_DIR/out/arch/arm64/boot/
     cd $AK3
-    mv "$KERNEL_DTB" "$AK3"
     mv "$KERNEL_DTBO" "$AK3"
     ZIP_NAME=$KERNEL_NAME-$DATE_NAME
     zip -r9 "$ZIP_NAME".zip * -x .git .github LICENSE README.md
