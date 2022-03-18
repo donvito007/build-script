@@ -88,7 +88,11 @@ build_kernel(){
 #
 # build_end - creates and sends zip
 build_end(){
-    if ! [[ -a "$KERNEL_IMG" || -a "$KERNEL_IMG_DTB" ]]; then
+    if [[ -a "$KERNEL_IMG_DTB" ]]; then
+    mv "$KERNEL_IMG_DTB" "$AK3"
+    elif [[ -a "$KERNEL_IMG" ]]; then
+    mv "$KERNEL_IMG" "$AK3"
+    else
     echo -e "${YELLOW}===> ${RED}Build failed, sad${WHITE}"
     echo -e "${YELLOW}===> ${GREEN}Send build log to Telegram${WHITE}"
     tg_log
@@ -97,8 +101,6 @@ build_end(){
     echo -e "${YELLOW}===> ${GREEN}Build success, generating flashable zip..."
     ls $KERNEL_DIR/out/arch/arm64/boot/
     cd $AK3
-    mv "$KERNEL_IMG" "$AK3"
-    mv "$KERNEL_IMG_DTB" "$AK3"
     mv "$KERNEL_DTB" "$AK3"
     mv "$KERNEL_DTBO" "$AK3"
     ZIP_NAME=$KERNEL_NAME-$DATE_NAME
