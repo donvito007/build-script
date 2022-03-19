@@ -8,6 +8,7 @@ KERNEL_DIR="$(pwd)"
 AK3="$KERNEL_DIR/AnyKernel3"
 TOOLCHAIN="$KERNEL_DIR/clang"
 LOG="$KERNEL_DIR/log.txt"
+KERNEL_DTB="$KERNEL_DIR/out/arch/arm64/boot/dtb"
 KERNEL_IMG="$KERNEL_DIR/out/arch/arm64/boot/Image"
 KERNEL_IMG_DTB="$KERNEL_DIR/out/arch/arm64/boot/Image-dtb"
 KERNEL_IMG_GZ_DTB="$KERNEL_DIR/out/arch/arm64/boot/Image.gz-dtb"
@@ -101,8 +102,10 @@ build_end(){
     exit 1
     fi
     echo -e "${YELLOW}===> ${GREEN}Build success, generating flashable zip..."
+    find $KERNEL_DIR/out/arch/arm64/boot/dts/vendor/qcom -name '*.dtb' -exec cat {} + > $KERNEL_DIR/out/arch/arm64/boot/dtb
     ls $KERNEL_DIR/out/arch/arm64/boot/
     cd $AK3
+    mv "$KERNEL_DTB" "$AK3"
     mv "$KERNEL_DTBO" "$AK3"
     ZIP_NAME=$KERNEL_NAME-$DATE_NAME
     zip -r9 "$ZIP_NAME".zip * -x .git .github LICENSE README.md
