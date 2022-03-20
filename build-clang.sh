@@ -105,14 +105,16 @@ build_end(){
 #    find $KERNEL_DIR/out/arch/arm64/boot/dts/vendor/qcom -name '*.dtb' -exec cat {} + > $KERNEL_DIR/out/arch/arm64/boot/dtb
     ls $KERNEL_DIR/out/arch/arm64/boot/
     cd $AK3
+    DTBO_NAME=${KERNEL_NAME}-${DATE_NAME}-DTBO.img
+    ZIP_NAME=${KERNEL_NAME}-${DATE_NAME}.zip
     mv "$KERNEL_DTB" "$AK3"
-    mv "$KERNEL_DTBO" "$AK3"
-    ZIP_NAME=$KERNEL_NAME-$DATE_NAME
-    zip -r9 "$ZIP_NAME".zip * -x .git .github LICENSE README.md
-    ZIP_NAME="$ZIP_NAME".zip
-    echo -e "${YELLOW}===> ${BLUE}Send zip to Telegram"
+    mv "$KERNEL_DTBO" "$AK3/$DTBO_NAME"
+    zip -r9 $ZIP_NAME * -x .git .github LICENSE README.md
+    echo -e "${YELLOW}===> ${BLUE}Send kernel to Telegram"
     tg_pushzip "$ZIP_NAME" "Time taken: <code>$((DIFF / 60))m $((DIFF % 60))s</code>"
     echo -e "${YELLOW}===> ${WHITE}Zip name: ${GREEN}${ZIP_NAME}"
+    echo -e "${YELLOW}===> ${BLUE}Send dtbo.img to Telegram"
+    tg_pushzip "$DTBO_NAME"
     echo -e "${YELLOW}===> ${RED}Send build log to Telegram"
     tg_log
 }
