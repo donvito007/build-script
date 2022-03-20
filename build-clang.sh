@@ -102,7 +102,7 @@ build_end(){
     exit 1
     fi
     echo -e "${YELLOW}===> ${GREEN}Build success, generating flashable zip..."
-    find $KERNEL_DIR/out/arch/arm64/boot/dts/vendor/qcom -name '*.dtb' -exec cat {} + > $KERNEL_DIR/out/arch/arm64/boot/dtb
+#    find $KERNEL_DIR/out/arch/arm64/boot/dts/vendor/qcom -name '*.dtb' -exec cat {} + > $KERNEL_DIR/out/arch/arm64/boot/dtb
     ls $KERNEL_DIR/out/arch/arm64/boot/
     cd $AK3
     mv "$KERNEL_DTB" "$AK3"
