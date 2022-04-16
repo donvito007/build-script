@@ -104,6 +104,7 @@ build_end(){
     echo -e "${YELLOW}===> ${GREEN}Build success, generating flashable zip..."
 #    find $KERNEL_DIR/out/arch/arm64/boot/dts/vendor/qcom -name '*.dtb' -exec cat {} + > $KERNEL_DIR/out/arch/arm64/boot/dtb
     ls $KERNEL_DIR/out/arch/arm64/boot/
+    cp "$KERNEL_DTBO" "$AK3"
     cd $AK3
     DTBO_NAME=${KERNEL_NAME}-${DATE_NAME}-DTBO.img
     ZIP_NAME=${KERNEL_NAME}-${DATE_NAME}.zip
