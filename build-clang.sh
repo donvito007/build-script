@@ -102,20 +102,23 @@ build_end(){
     exit 1
     fi
     echo -e "${YELLOW}===> ${GREEN}Build success, generating flashable zip..."
-#    find $KERNEL_DIR/out/arch/arm64/boot/dts/vendor/qcom -name '*.dtb' -exec cat {} + > $KERNEL_DIR/out/arch/arm64/boot/dtb
+    find $KERNEL_DIR/out/arch/arm64/boot/dts/vendor/qcom -name '*.dtb' -exec cat {} + > $KERNEL_DIR/out/arch/arm64/boot/dtb
     ls $KERNEL_DIR/out/arch/arm64/boot/
     cp "$KERNEL_DTBO" "$AK3"
     cd $AK3
     DTBO_NAME=${KERNEL_NAME}-${DATE_NAME}-DTBO.img
+    DTB_NAME=${KERNEL_NAME}-${DATE_NAME}-DTB
     ZIP_NAME=${KERNEL_NAME}-${DATE_NAME}.zip
-    mv "$KERNEL_DTB" "$AK3"
-    mv "$KERNEL_DTBO" "$AK3/$DTBO_NAME"
     zip -r9 $ZIP_NAME * -x .git .github LICENSE README.md
+    mv "$KERNEL_DTBO" "$AK3/$DTBO_NAME"
+    mv "$KERNEL_DTB" "$AK3/$DTB_NAME"
     echo -e "${YELLOW}===> ${BLUE}Send kernel to Telegram"
     tg_pushzip "$ZIP_NAME" "Time taken: <code>$((DIFF / 60))m $((DIFF % 60))s</code>"
     echo -e "${YELLOW}===> ${WHITE}Zip name: ${GREEN}${ZIP_NAME}"
     echo -e "${YELLOW}===> ${BLUE}Send dtbo.img to Telegram"
     tg_pushzip "$DTBO_NAME"
+    echo -e "${YELLOW}===> ${BLUE}Send dtb to Telegram"
+    tg_pushzip "$DTB_NAME"
     echo -e "${YELLOW}===> ${RED}Send build log to Telegram"
     tg_log
 }
