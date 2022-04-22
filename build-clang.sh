@@ -16,6 +16,18 @@ KERNEL_DTBO="$KERNEL_DIR/out/arch/arm64/boot/dtbo.img"
 TG_CHAT_ID="-1001180467256"
 TG_BOT_TOKEN="$TELEGRAM_TOKEN"
 CLANG_VERSION="$1"
+DATE_NAME=$(date +"%Y%m%d")
+COMMIT=$(git log --pretty=format:"%s" -1)
+COMMIT_SHA=$(git rev-parse --short HEAD)
+KERNEL_BRANCH=$(git rev-parse --abbrev-ref HEAD)
+BUILD_DATE=$(date)
+CAPTION=$(echo -e \
+"Build started
+Date: <code>$BUILD_DATE</code>
+HEAD: <code>$COMMIT_SHA</code>
+Commit: <code>$COMMIT</code>
+Branch: <code>$KERNEL_BRANCH</code>
+")
 
 # Colors
 WHITE='\033[0m'
@@ -83,7 +95,6 @@ build_kernel(){
        CROSS_COMPILE=aarch64-linux-gnu- |& tee $LOG
     BUILD_END=$(date +"%s")
     DIFF=$((BUILD_END - BUILD_START))
-    DATE_NAME=$(date +"%A"_"%I":"%M"_"%p")
 }
 
 #
@@ -106,9 +117,9 @@ build_end(){
     ls $KERNEL_DIR/out/arch/arm64/boot/
     cp "$KERNEL_DTBO" "$AK3"
     cd $AK3
-    DTBO_NAME=${KERNEL_NAME}-${DATE_NAME}-DTBO.img
-    DTB_NAME=${KERNEL_NAME}-${DATE_NAME}-DTB
-    ZIP_NAME=${KERNEL_NAME}-${DATE_NAME}.zip
+    DTBO_NAME=${KERNEL_NAME}-DTBO-${DATE_NAME}-${COMMIT_SHA}.img
+    DTB_NAME=${KERNEL_NAME}-DTB-${DATE_NAME}-${COMMIT_SHA}
+    ZIP_NAME=${KERNEL_NAME}-${DATE_NAME}-${COMMIT_SHA}.zip
     zip -r9 $ZIP_NAME * -x .git .github LICENSE README.md
     mv "$KERNEL_DTBO" "$AK3/$DTBO_NAME"
     mv "$KERNEL_DTB" "$AK3/$DTB_NAME"
@@ -122,18 +133,6 @@ build_end(){
     echo -e "${YELLOW}===> ${RED}Send build log to Telegram"
     tg_log
 }
-
-COMMIT=$(git log --pretty=format:"%s" -1)
-COMMIT_SHA=$(git rev-parse --short HEAD)
-KERNEL_BRANCH=$(git rev-parse --abbrev-ref HEAD)
-BUILD_DATE=$(date)
-CAPTION=$(echo -e \
-"Build started
-Date: <code>$BUILD_DATE</code>
-HEAD: <code>$COMMIT_SHA</code>
-Commit: <code>$COMMIT</code>
-Branch: <code>$KERNEL_BRANCH</code>
-")
 
 #
 # compile time
