@@ -116,6 +116,7 @@ build_end(){
     find ${KERNEL_DIR}/out/arch/arm64/boot/dts/vendor/qcom -name '*.dtb' -exec cat {} + > ${KERNEL_DIR}/out/arch/arm64/boot/dtb
     ls ${KERNEL_DIR}/out/arch/arm64/boot/
     cp ${KERNEL_DTBO} ${AK3}
+    cp ${KERNEL_DTB} .
     cd ${AK3}
     DTBO_NAME=${KERNEL_NAME}-DTBO-${DATE_NAME}-${COMMIT_SHA}.img
     DTB_NAME=${KERNEL_NAME}-DTB-${DATE_NAME}-${COMMIT_SHA}
