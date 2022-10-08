@@ -15,19 +15,13 @@ KERNEL_IMG_GZ_DTB=${KERNEL_DIR}/out/arch/arm64/boot/Image.gz-dtb
 KERNEL_DTBO=${KERNEL_DIR}/out/arch/arm64/boot/dtbo.img
 TG_CHAT_ID=-1001180467256
 TG_BOT_TOKEN=${TELEGRAM_TOKEN}
-CLANG_VERSION=${1}
 DATE_NAME=$(date +"%Y%m%d")
 COMMIT=$(git log --pretty=format:"%s" -1)
 COMMIT_SHA=$(git rev-parse --short HEAD)
 KERNEL_BRANCH=$(git rev-parse --abbrev-ref HEAD)
 BUILD_DATE=$(date)
-CAPTION=$(echo -e \
-"Build started
-Date: <code>${BUILD_DATE}</code>
-HEAD: <code>${COMMIT_SHA}</code>
-Commit: <code>${COMMIT}</code>
-Branch: <code>${KERNEL_BRANCH}</code>
-")
+
+CLANG_VERSION=${1}
 
 # Colors
 WHITE='\033[0m'
@@ -59,9 +53,26 @@ clone_ak(){
 #
 # tg_sendinfo - sends text to telegram
 tg_sendinfo(){
+    if [ $1 == miui ]; then
+    CAPTION=$(echo -e \
+"MIUI Build started
+Date: <code>${BUILD_DATE}</code>
+HEAD: <code>${COMMIT_SHA}</code>
+Commit: <code>${COMMIT}</code>
+Branch: <code>${KERNEL_BRANCH}</code>
+")
+    else
+    CAPTION=$(echo -e \
+"Build started
+Date: <code>${BUILD_DATE}</code>
+HEAD: <code>${COMMIT_SHA}</code>
+Commit: <code>${COMMIT}</code>
+Branch: <code>${KERNEL_BRANCH}</code>
+")
+    fi
     curl -s "https://api.telegram.org/bot${TG_BOT_TOKEN}/sendMessage" \
         -F parse_mode=html \
-        -F text="${1}" \
+        -F text="${CAPTION}" \
         -F chat_id=${TG_CHAT_ID} &> /dev/null
 }
 
@@ -83,11 +94,20 @@ tg_log(){
 }
 
 #
+# miui_patch - apply custom patch before build
+miui_patch(){
+    git apply patch/miui-panel-dimension.patch
+}
+
+#
 # build_kernel
 build_kernel(){
     cd ${KERNEL_DIR}
     rm -rf out
     mkdir -p out
+    if [ $1 == miui ]; then
+        miui_patch
+    fi
     BUILD_START=$(date +"%s")
     make O=out cat_defconfig LLVM=1
     make -j$(nproc --all) O=out \
@@ -120,7 +140,11 @@ build_end(){
     cp ${KERNEL_DTB} .
     DTBO_NAME=${KERNEL_NAME}-DTBO-${DATE_NAME}-${COMMIT_SHA}.img
     DTB_NAME=${KERNEL_NAME}-DTB-${DATE_NAME}-${COMMIT_SHA}
-    ZIP_NAME=${KERNEL_NAME}-${DATE_NAME}-${COMMIT_SHA}.zip
+    if [ $1 == miui ]; then
+        ZIP_NAME=MIUI-${KERNEL_NAME}-${DATE_NAME}-${COMMIT_SHA}.zip
+    else
+        ZIP_NAME=${KERNEL_NAME}-${DATE_NAME}-${COMMIT_SHA}.zip
+    fi
     zip -r9 ${ZIP_NAME} * -x .git .github LICENSE README.md
     mv ${KERNEL_DTBO} ${AK3}/${DTBO_NAME}
     mv ${KERNEL_DTB} ${AK3}/${DTB_NAME}
@@ -136,10 +160,17 @@ build_end(){
 }
 
 #
+# build_all - run build script
+build_all(){
+    FLAG=$1
+    tg_sendinfo "${CAPTION}" ${FLAG}
+    build_kernel ${FLAG}
+    build_end ${FLAG}
+}
+
+#
 # compile time
 clone_tc
 clone_ak
-tg_sendinfo "${CAPTION}
-"
-build_kernel
-build_end
+build_all
+build_all miui
