@@ -54,8 +54,8 @@ clone_ak(){
 # tg_sendinfo - sends text to telegram
 tg_sendinfo(){
     if [ $1 == miui ]; then
-    CAPTION=$(echo -e \
-"MIUI Build started
+        CAPTION=$(echo -e \
+        "MIUI Build started
 Date: <code>${BUILD_DATE}</code>
 HEAD: <code>${COMMIT_SHA}</code>
 Commit: <code>${COMMIT}</code>
@@ -63,7 +63,7 @@ Branch: <code>${KERNEL_BRANCH}</code>
 ")
     else
     CAPTION=$(echo -e \
-"Build started
+        "Build started
 Date: <code>${BUILD_DATE}</code>
 HEAD: <code>${COMMIT_SHA}</code>
 Commit: <code>${COMMIT}</code>
@@ -120,12 +120,13 @@ build_kernel(){
 #
 # build_end - creates and sends zip
 build_end(){
+    rm -rf ${AK3}/Kucing* ${AK3}/dtb* ${AK3}/Image*
     if [[ -a ${KERNEL_IMG_GZ_DTB} ]]; then
-    mv ${KERNEL_IMG_GZ_DTB} ${AK3}
+        mv ${KERNEL_IMG_GZ_DTB} ${AK3}
     elif [[ -a {$KERNEL_IMG_DTB} ]]; then
-    mv ${KERNEL_IMG_DTB} ${AK3}
+        mv ${KERNEL_IMG_DTB} ${AK3}
     elif [[ -a ${KERNEL_IMG} ]]; then
-    mv ${KERNEL_IMG} ${AK3}
+        mv ${KERNEL_IMG} ${AK3}
     else
     echo -e "${YELLOW}===> ${RED}Build failed, sad${WHITE}"
     echo -e "${YELLOW}===> ${GREEN}Send build log to Telegram${WHITE}"
@@ -136,8 +137,8 @@ build_end(){
     find ${KERNEL_DIR}/out/arch/arm64/boot/dts/vendor/qcom -name '*.dtb' -exec cat {} + > ${KERNEL_DIR}/out/arch/arm64/boot/dtb
     ls ${KERNEL_DIR}/out/arch/arm64/boot/
     cp ${KERNEL_DTBO} ${AK3}
+    cp ${KERNEL_DTB} ${AK3}
     cd ${AK3}
-    cp ${KERNEL_DTB} .
     DTBO_NAME=${KERNEL_NAME}-DTBO-${DATE_NAME}-${COMMIT_SHA}.img
     DTB_NAME=${KERNEL_NAME}-DTB-${DATE_NAME}-${COMMIT_SHA}
     if [ $1 == miui ]; then
@@ -163,7 +164,7 @@ build_end(){
 # build_all - run build script
 build_all(){
     FLAG=$1
-    tg_sendinfo "${CAPTION}" ${FLAG}
+    tg_sendinfo ${FLAG}
     build_kernel ${FLAG}
     build_end ${FLAG}
 }
