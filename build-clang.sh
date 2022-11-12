@@ -31,7 +31,6 @@ YELLOW='\033[1;33m'
 BLUE='\033[1;34m'
 
 export KBUILD_BUILD_USER=Diaz
-export KBUILD_BUILD_HOST=DroneCI
 export PATH=${TOOLCHAIN}/bin:${PATH}
 
 #
@@ -53,7 +52,7 @@ clone_ak(){
 #
 # tg_sendinfo - sends text to telegram
 tg_sendinfo(){
-    if [ $1 == miui ]; then
+    if [[ $1 == miui ]]; then
         CAPTION=$(echo -e \
         "MIUI Build started
 Date: <code>${BUILD_DATE}</code>
@@ -105,7 +104,7 @@ build_kernel(){
     cd ${KERNEL_DIR}
     rm -rf out
     mkdir -p out
-    if [ $1 == miui ]; then
+    if [[ $1 == miui ]]; then
         miui_patch
     fi
     BUILD_START=$(date +"%s")
@@ -141,7 +140,7 @@ build_end(){
     cd ${AK3}
     DTBO_NAME=${KERNEL_NAME}-DTBO-${DATE_NAME}-${COMMIT_SHA}.img
     DTB_NAME=${KERNEL_NAME}-DTB-${DATE_NAME}-${COMMIT_SHA}
-    if [ $1 == miui ]; then
+    if [[ $1 == miui ]]; then
         ZIP_NAME=MIUI-${KERNEL_NAME}-${DATE_NAME}-${COMMIT_SHA}.zip
     else
         ZIP_NAME=${KERNEL_NAME}-${DATE_NAME}-${COMMIT_SHA}.zip
@@ -156,7 +155,7 @@ build_end(){
     tg_pushzip ${DTBO_NAME}
     echo -e "${YELLOW}===> ${BLUE}Send dtb to Telegram"
     tg_pushzip ${DTB_NAME}
-    echo -e "${YELLOW}===> ${RED}Send build log to Telegram"
+    echo -e "${YELLOW}===> ${RED}Send build log to Telegram${WHITE}"
     tg_log
 }
 
