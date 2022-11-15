@@ -37,11 +37,14 @@ export PATH=${TOOLCHAIN}/bin:${PATH}
 # Clone Clang Compiler
 clone_tc(){
     if [[ -a ${TOOLCHAIN} ]]; then
-        echo -e "${YELLOW}===> ${BLUE}kucing Clang exist${WHITE}"
+        echo -e "${YELLOW}===> ${BLUE}Overwrite kucing clang${WHITE}"
+        rm -rf ${TOOLCHAIN}/*
+        wget -qO clang.tar.zst https://github.com/Diaz1401/clang/releases/download/${CLANG_VERSION}/clang.tar.zst
+        tar xf clang.tar.zst -C ${TOOLCHAIN}
     else
         echo -e "${YELLOW}===> ${BLUE}Downloading kucing Clang${WHITE}"
         mkdir -p ${TOOLCHAIN}
-        wget -q https://github.com/Diaz1401/clang/releases/download/${CLANG_VERSION}/clang.tar.zst
+        wget -qO clang.tar.zst https://github.com/Diaz1401/clang/releases/download/${CLANG_VERSION}/clang.tar.zst
         tar xf clang.tar.zst -C ${TOOLCHAIN}
     fi
 }
@@ -51,7 +54,7 @@ clone_tc(){
 clone_ak(){
     if [[ -a ${AK3} ]]; then
         echo -e "${YELLOW}===> ${BLUE}AnyKernel3 exist${WHITE}"
-        echo -e "${YELLOW}===> ${BLUE}Try to update repo${WHITE}"
+        echo -e "${YELLOW}===> ${BLUE}Update AnyKernel3${WHITE}"
         pushd ${AK3}
         git pull
         popd
