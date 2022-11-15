@@ -173,4 +173,4 @@ build_all(){
 clone_tc
 clone_ak
 build_all
-build_all miui
+#build_all miui
