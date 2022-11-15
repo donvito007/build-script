@@ -36,17 +36,29 @@ export PATH=${TOOLCHAIN}/bin:${PATH}
 #
 # Clone Clang Compiler
 clone_tc(){
-    echo -e "${YELLOW}===> ${BLUE}Downloading kucing Clang${WHITE}"
-    mkdir -p ${TOOLCHAIN}
-    wget -q https://github.com/Diaz1401/clang/releases/download/${CLANG_VERSION}/clang.tar.zst
-    tar xf clang.tar.zst -C ${TOOLCHAIN}
+    if [[ -a ${TOOLCHAIN} ]]; then
+        echo -e "${YELLOW}===> ${BLUE}kucing Clang exist${WHITE}"
+    else
+        echo -e "${YELLOW}===> ${BLUE}Downloading kucing Clang${WHITE}"
+        mkdir -p ${TOOLCHAIN}
+        wget -q https://github.com/Diaz1401/clang/releases/download/${CLANG_VERSION}/clang.tar.zst
+        tar xf clang.tar.zst -C ${TOOLCHAIN}
+    fi
 }
 
 #
 # Clones anykernel
 clone_ak(){
-    echo -e "${YELLOW}===> ${BLUE}Cloning AnyKernel3${WHITE}"
-    git clone -q --depth 1 https://github.com/Diaz1401/AnyKernel3.git -b alioth ${AK3}
+    if [[ -a ${AK3} ]]; then
+        echo -e "${YELLOW}===> ${BLUE}AnyKernel3 exist${WHITE}"
+        echo -e "${YELLOW}===> ${BLUE}Try to update repo${WHITE}"
+        pushd ${AK3}
+        git pull
+        popd
+    else
+        echo -e "${YELLOW}===> ${BLUE}Cloning AnyKernel3${WHITE}"
+        git clone -q --depth 1 https://github.com/Diaz1401/AnyKernel3.git -b alioth ${AK3}
+    fi
 }
 
 #
@@ -119,7 +131,7 @@ build_kernel(){
 #
 # build_end - creates and sends zip
 build_end(){
-    rm -rf ${AK3}/Kucing* ${AK3}/dtb* ${AK3}/Image*
+    rm -rf ${AK3}/Kucing* ${AK3}/MIUI-Kucing* ${AK3}/dtb* ${AK3}/Image*
     if [[ -a ${KERNEL_IMG_GZ_DTB} ]]; then
         mv ${KERNEL_IMG_GZ_DTB} ${AK3}
     elif [[ -a {$KERNEL_IMG_DTB} ]]; then
@@ -132,7 +144,7 @@ build_end(){
     tg_log
     exit 1
     fi
-    echo -e "${YELLOW}===> ${GREEN}Build success, generating flashable zip..."
+    echo -e "${YELLOW}===> ${GREEN}Build success, generating flashable zip...${WHITE}"
     find ${KERNEL_DIR}/out/arch/arm64/boot/dts/vendor/qcom -name '*.dtb' -exec cat {} + > ${KERNEL_DIR}/out/arch/arm64/boot/dtb
     ls ${KERNEL_DIR}/out/arch/arm64/boot/
     cp ${KERNEL_DTBO} ${AK3}
@@ -148,12 +160,12 @@ build_end(){
     zip -r9 ${ZIP_NAME} * -x .git .github LICENSE README.md
     mv ${KERNEL_DTBO} ${AK3}/${DTBO_NAME}
     mv ${KERNEL_DTB} ${AK3}/${DTB_NAME}
-    echo -e "${YELLOW}===> ${BLUE}Send kernel to Telegram"
+    echo -e "${YELLOW}===> ${BLUE}Send kernel to Telegram${WHITE}"
     tg_pushzip ${ZIP_NAME} "Time taken: <code>$((DIFF / 60))m $((DIFF % 60))s</code>"
     echo -e "${YELLOW}===> ${WHITE}Zip name: ${GREEN}${ZIP_NAME}"
-    echo -e "${YELLOW}===> ${BLUE}Send dtbo.img to Telegram"
+    echo -e "${YELLOW}===> ${BLUE}Send dtbo.img to Telegram${WHITE}"
     tg_pushzip ${DTBO_NAME}
-    echo -e "${YELLOW}===> ${BLUE}Send dtb to Telegram"
+    echo -e "${YELLOW}===> ${BLUE}Send dtb to Telegram${WHITE}"
     tg_pushzip ${DTB_NAME}
     echo -e "${YELLOW}===> ${RED}Send build log to Telegram${WHITE}"
     tg_log
