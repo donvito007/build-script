@@ -35,7 +35,6 @@ BLUE='\033[1;34m'
 export ARCH=arm64
 export KBUILD_BUILD_USER=Diaz
 export PATH=${TOOLCHAIN}/bin:${PATH}
-
 export PATH=${GCC64}/bin:${GCC32}/bin:${PATH}
 
 #
@@ -48,8 +47,8 @@ clone_tc(){
         mkdir -p $GCC32
         wget -qO clang.tar.zst https://github.com/Diaz1401/clang/releases/download/${CLANG_VERSION}/clang.tar.zst
         tar xf clang.tar.zst -C ${TOOLCHAIN}
-        git clone --depth=1 https://github.com/mvaisakh/gcc-arm64 $GCC64
-        git clone --depth=1 https://github.com/mvaisakh/gcc-arm64 $GCC32
+        git clone -q --depth=1 https://github.com/mvaisakh/gcc-arm64 $GCC64
+        git clone -q --depth=1 https://github.com/mvaisakh/gcc-arm64 $GCC32
     else
         echo -e "${YELLOW}===> ${BLUE}Downloading Toolchain${WHITE}"
         mkdir -p ${TOOLCHAIN}
@@ -57,8 +56,8 @@ clone_tc(){
         mkdir -p $GCC32
         wget -qO clang.tar.zst https://github.com/Diaz1401/clang/releases/download/${CLANG_VERSION}/clang.tar.zst
         tar xf clang.tar.zst -C ${TOOLCHAIN}
-        git clone --depth=1 https://github.com/mvaisakh/gcc-arm64 $GCC64
-        git clone --depth=1 https://github.com/mvaisakh/gcc-arm64 $GCC32
+        git clone -q --depth=1 https://github.com/mvaisakh/gcc-arm64 $GCC64
+        git clone -q --depth=1 https://github.com/mvaisakh/gcc-arm64 $GCC32
     fi
 }
 
@@ -136,9 +135,9 @@ build_kernel(){
         miui_patch
     fi
     BUILD_START=$(date +"%s")
-    make O=out vendor/quantum_defconfig LLVM=1
+    make O=out vendor/quantum_defconfig LLVM=1 LLVM_IAS=1
     make -j$(nproc --all) O=out \
-       LLVM=1 \
+       LLVM=1 LLVM_IAS=1 \
        CROSS_COMPILE=aarch64-linux-gnu- \
        CROSS_COMPILE_ARM32=arm-linux-gnueabi- |& tee ${LOG}
     BUILD_END=$(date +"%s")
