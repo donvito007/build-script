@@ -60,7 +60,7 @@ clone_ak(){
         popd
     else
         echo -e "${YELLOW}===> ${BLUE}Cloning AnyKernel3${WHITE}"
-        git clone -q --depth 1 https://github.com/Diaz1401/AnyKernel3.git -b alioth ${AK3}
+        git clone -q --depth 1 https://github.com/KuroSeinenbutV2/AnyKernel3.git -b sweet ${AK3}
     fi
 }
 
@@ -123,7 +123,7 @@ build_kernel(){
         miui_patch
     fi
     BUILD_START=$(date +"%s")
-    make O=out cat_defconfig LLVM=1
+    make O=out vendor/quantum_defconfig LLVM=1
     make -j$(nproc --all) O=out \
        LLVM=1 \
        CROSS_COMPILE=aarch64-linux-gnu- |& tee ${LOG}
@@ -148,7 +148,7 @@ build_end(){
     exit 1
     fi
     echo -e "${YELLOW}===> ${GREEN}Build success, generating flashable zip...${WHITE}"
-    find ${KERNEL_DIR}/out/arch/arm64/boot/dts/vendor/qcom -name '*.dtb' -exec cat {} + > ${KERNEL_DIR}/out/arch/arm64/boot/dtb
+    find ${KERNEL_DIR}/out/arch/arm64/boot/dts/qcom -name '*.dtb' -exec cat {} + > ${KERNEL_DIR}/out/arch/arm64/boot/dtb
     ls ${KERNEL_DIR}/out/arch/arm64/boot/
     cp ${KERNEL_DTBO} ${AK3}
     cp ${KERNEL_DTB} ${AK3}
