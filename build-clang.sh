@@ -7,6 +7,8 @@ KERNEL_NAME=Kucing
 KERNEL_DIR=$(pwd)
 AK3=${KERNEL_DIR}/AnyKernel3
 TOOLCHAIN=${KERNEL_DIR}/clang
+GCC64=${TOOLCHAIN}/GCC64
+GCC32=${TOOLCHAIN}/GCC32
 LOG=${KERNEL_DIR}/log.txt
 KERNEL_DTB=${KERNEL_DIR}/out/arch/arm64/boot/dtb
 KERNEL_IMG=${KERNEL_DIR}/out/arch/arm64/boot/Image
@@ -34,19 +36,29 @@ export ARCH=arm64
 export KBUILD_BUILD_USER=Diaz
 export PATH=${TOOLCHAIN}/bin:${PATH}
 
+export PATH=${GCCaPath}/bin:${GCCbPath}/bin:${PATH}
+
 #
-# Clone Clang Compiler
+# Clone Clang & GCC Compiler
 clone_tc(){
     if [[ -a ${TOOLCHAIN} ]]; then
-        echo -e "${YELLOW}===> ${BLUE}Overwrite kucing clang${WHITE}"
+        echo -e "${YELLOW}===> ${BLUE}Overwrite Toolchain${WHITE}"
         rm -rf ${TOOLCHAIN}/*
+        mkdir -p $GCC64
+        mkdir -p $GCC32
         wget -qO clang.tar.zst https://github.com/Diaz1401/clang/releases/download/${CLANG_VERSION}/clang.tar.zst
         tar xf clang.tar.zst -C ${TOOLCHAIN}
+        git clone --depth=1 https://github.com/mvaisakh/gcc-arm64 $GCC64
+        git clone --depth=1 https://github.com/mvaisakh/gcc-arm64 $GCC32
     else
-        echo -e "${YELLOW}===> ${BLUE}Downloading kucing Clang${WHITE}"
+        echo -e "${YELLOW}===> ${BLUE}Downloading Toolchain${WHITE}"
         mkdir -p ${TOOLCHAIN}
+        mkdir -p $GCC64
+        mkdir -p $GCC32
         wget -qO clang.tar.zst https://github.com/Diaz1401/clang/releases/download/${CLANG_VERSION}/clang.tar.zst
         tar xf clang.tar.zst -C ${TOOLCHAIN}
+        git clone --depth=1 https://github.com/mvaisakh/gcc-arm64 $GCC64
+        git clone --depth=1 https://github.com/mvaisakh/gcc-arm64 $GCC32
     fi
 }
 
