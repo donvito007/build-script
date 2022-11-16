@@ -124,9 +124,9 @@ build_kernel(){
         sed -i 's:CONFIG_LTO_CLANG=y:# CONFIG_LTO_CLANG is not set:g' \
         ${KERNEL_DIR}/arch/arm64/configs/cat_defconfig
     fi
-    make O=out cat_defconfig LLVM=1
+    make O=out cat_defconfig LLVM=1 LLVM_IAS=1
     make -j$(nproc --all) O=out \
-       LLVM=1 \
+       LLVM=1 LLVM_IAS=1 \
        CROSS_COMPILE=aarch64-linux-gnu- |& tee ${LOG}
     BUILD_END=$(date +"%s")
     DIFF=$((BUILD_END - BUILD_START))
