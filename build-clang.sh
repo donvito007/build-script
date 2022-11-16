@@ -36,7 +36,7 @@ export ARCH=arm64
 export KBUILD_BUILD_USER=Diaz
 export PATH=${TOOLCHAIN}/bin:${PATH}
 
-export PATH=${GCCaPath}/bin:${GCCbPath}/bin:${PATH}
+export PATH=${GCC64}/bin:${GCC32}/bin:${PATH}
 
 #
 # Clone Clang & GCC Compiler
