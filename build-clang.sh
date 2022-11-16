@@ -139,7 +139,8 @@ build_kernel(){
     make O=out vendor/quantum_defconfig LLVM=1
     make -j$(nproc --all) O=out \
        LLVM=1 \
-       CROSS_COMPILE=aarch64-linux-gnu- |& tee ${LOG}
+       CROSS_COMPILE=aarch64-linux-gnu- \
+       CROSS_COMPILE_ARM32=arm-linux-gnueabi- |& tee ${LOG}
     BUILD_END=$(date +"%s")
     DIFF=$((BUILD_END - BUILD_START))
 }
