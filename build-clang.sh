@@ -30,6 +30,7 @@ GREEN='\033[1;32m'
 YELLOW='\033[1;33m'
 BLUE='\033[1;34m'
 
+export ARCH=arm64
 export KBUILD_BUILD_USER=Diaz
 export PATH=${TOOLCHAIN}/bin:${PATH}
 
