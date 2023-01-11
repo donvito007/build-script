@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Copyright (c) 2021 CloudedQuartz
-# Copyright (c) 2021-2022 Diaz1401
+# Copyright (c) 2021-2023 Diaz1401
 
 KERNEL_NAME=Kucing
 KERNEL_DIR=$(pwd)
@@ -120,6 +120,10 @@ build_kernel(){
         miui_patch
     fi
     BUILD_START=$(date +"%s")
+    if [[ $(nproc --all) -lt 16 ]]; then
+        sed -i 's:CONFIG_LTO_CLANG=y:# CONFIG_LTO_CLANG is not set:g' \
+        ${KERNEL_DIR}/arch/arm64/configs/cat_defconfig
+    fi
     make O=out cat_defconfig LLVM=1
     make -j$(nproc --all) O=out \
        LLVM=1 \
