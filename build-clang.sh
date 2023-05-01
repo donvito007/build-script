@@ -3,6 +3,9 @@
 # Copyright (c) 2021 CloudedQuartz
 # Copyright (c) 2021-2023 Diaz1401
 
+# Silence all safe.directory warnings
+git config --global --add safe.directory '*'
+
 KERNEL_NAME=Kucing
 KERNEL_DIR=$(pwd)
 AK3=${KERNEL_DIR}/AnyKernel3
