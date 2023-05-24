@@ -123,8 +123,6 @@ build_kernel(){
     fi
     BUILD_START=$(date +"%s")
     make O=out cat_defconfig
-    ./scripts/config --file out/.config \
-        -e LTO_GCC
     make -j$(nproc --all) O=out \
         CROSS_COMPILE=aarch64-elf- \
         CROSS_COMPILE_ARM32=arm-eabi- |& tee $LOG
