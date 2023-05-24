@@ -34,7 +34,7 @@ YELLOW='\033[1;33m'
 BLUE='\033[1;34m'
 
 export KBUILD_BUILD_USER=Diaz
-export PATH="${TOOLCHAIN}/arm64/bin:${TOOLCHAIN}/arm/bin:${PATH}"
+export PATH="${TOOLCHAIN}/bin:${PATH}"
 
 #
 # Clone GCC Compiler
@@ -43,8 +43,7 @@ clone_tc(){
         echo -e "${YELLOW}===> ${BLUE}GCC exist${WHITE}"
     else
         mkdir -p ${TOOLCHAIN}
-        git clone https://github.com/Diaz1401/gcc-arm64 --depth 1 -b gcc-${GCC_VERSION} ${TOOLCHAIN}/arm64
-        git clone https://github.com/Diaz1401/gcc-arm --depth 1 -b gcc-${GCC_VERSION} ${TOOLCHAIN}/arm
+        git clone https://github.com/Diaz1401/gcc-arm64 --depth 1 -b gcc-${GCC_VERSION} ${TOOLCHAIN}
     fi
 }
 
@@ -124,8 +123,7 @@ build_kernel(){
     BUILD_START=$(date +"%s")
     make O=out cat_defconfig
     make -j$(nproc --all) O=out \
-        CROSS_COMPILE=aarch64-elf- \
-        CROSS_COMPILE_ARM32=arm-eabi- |& tee $LOG
+        CROSS_COMPILE=aarch64-elf- |& tee $LOG
     BUILD_END=$(date +"%s")
     DIFF=$((BUILD_END - BUILD_START))
 }
